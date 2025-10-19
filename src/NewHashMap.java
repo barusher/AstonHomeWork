@@ -1,4 +1,13 @@
-public class NewHashMap<K, V> {
+public class NewHashMap<K, V> implements MyMap<K, V> {
+
+    private static final int DEFAULT_CAPACITY = 16;
+    private static final float DEFAULT_LOAD_FACTOR = 0.75f;
+
+    private final float loadFactor;
+
+    private Node<K, V>[] bucket;
+    private int size;
+    private int threshold;
 
     static class Node<K, V> {
         final K key;
@@ -11,13 +20,6 @@ public class NewHashMap<K, V> {
         }
     }
 
-    private static final int DEFAULT_CAPACITY = 16;
-    private static final float DEFAULT_LOAD_FACTOR = 0.75f;
-
-    private Node<K, V>[] bucket;
-    private int size;
-    private int threshold;
-    private final float loadFactor;
 
     public NewHashMap() {
         this(DEFAULT_CAPACITY, DEFAULT_LOAD_FACTOR);
@@ -41,6 +43,103 @@ public class NewHashMap<K, V> {
         this.threshold = (int) (initialCapacity * loadFactor);
     }
 
+    @Override
+    public V put(K key, V value) {
+        if (size >= threshold) {
+            resize();
+        }
+
+        int index = getIndex(key);
+        Node<K, V> newNode = new Node<>(key, value);
+
+        if (bucket[index] == null) {
+            bucket[index] = newNode;
+            size++;
+
+            return null;
+        }
+
+        Node<K, V> current = bucket[index];
+        Node<K, V> prev = null;
+        while (current != null) {
+            if (keysEqual(current.key, key)) {
+                V oldValue = current.value;
+                current.value = value;
+
+                return oldValue;
+            }
+            prev = current;
+            current = current.next;
+        }
+        prev.next = newNode;
+        size++;
+
+        return null;
+    }
+
+    @Override
+    public V get(K key) {
+        int index = getIndex(key);
+        Node<K, V> current = bucket[index];
+
+        while (current != null) {
+            if (keysEqual(current.key, key)) {
+                return current.value;
+            }
+            current = current.next;
+        }
+
+        return null;
+    }
+
+    @Override
+    public V remove(K key) {
+        int index = getIndex(key);
+        Node<K, V> current = bucket[index];
+        Node<K, V> prev = null;
+
+        while (current != null) {
+            if (keysEqual(current.key, key)) {
+                V removedValue = current.value;
+                if (prev == null) {
+                    bucket[index] = current.next;
+                } else {
+                    prev.next = current.next;
+                }
+                size--;
+                return removedValue;
+            }
+            prev = current;
+            current = current.next;
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean containsKey(K key) {
+        return get(key) != null;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+
+    @Override
+    public void clear() {
+        for (int i = 0; i < bucket.length; i++) {
+            bucket[i] = null;
+        }
+        size = 0;
+    }
+
     @SuppressWarnings("unchecked")
     private void resize() {
         int newCapacity = bucket.length * 2;
@@ -62,99 +161,16 @@ public class NewHashMap<K, V> {
     }
 
     private int getIndex(K key) {
-        if(key == null) {
+        if (key == null) {
             return 0; // null ключ будет в бакете 0
         }
         return Math.abs(key.hashCode()) % bucket.length;
     }
 
     private boolean keysEqual(K key1, K key2) {
-        if(key1 == null && key2 == null) return true;
-        if(key1 == null || key2 == null) return false;
+        if (key1 == null && key2 == null) return true;
+        if (key1 == null || key2 == null) return false;
+
         return key1.equals(key2);
-    }
-
-    public V put(K key, V value) {
-        if(size >= threshold) {
-            resize();
-        }
-
-        int index = getIndex(key);
-        Node<K, V> newNode = new Node<>(key, value);
-
-        if(bucket[index] == null) {
-            bucket[index] = newNode;
-            size++;
-            return null;
-        }
-
-        Node<K, V> current = bucket[index];
-        Node<K, V> prev = null;
-        while(current != null) {
-            if(keysEqual(current.key, key)) {
-                V oldValue = current.value;
-                current.value = value;
-                return oldValue;
-            }
-            prev = current;
-            current = current.next;
-        }
-        prev.next = newNode;
-        size++;
-        return null;
-    }
-
-    public V get(K key) {
-        int index = getIndex(key);
-        Node<K, V> current = bucket[index];
-
-        while(current != null) {
-            if(keysEqual(current.key, key)) {
-                return current.value;
-            }
-            current = current.next;
-        }
-        return null;
-    }
-
-    public V remove(K key) {
-        int index = getIndex(key);
-        Node<K, V> current = bucket[index];
-        Node<K, V> prev = null;
-
-        while(current != null){
-            if(keysEqual(current.key, key)) {
-                V removedValue = current.value;
-                if(prev == null){
-                    bucket[index] = current.next;
-                } else {
-                    prev.next = current.next;
-                }
-                size--;
-                return removedValue;
-            }
-            prev = current;
-            current = current.next;
-        }
-        return null;
-    }
-
-    public int size() {
-        return size;
-    }
-
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    public void clear() {
-        for (int i = 0; i < bucket.length; i++) {
-            bucket[i] = null;
-        }
-        size = 0;
-    }
-
-    public boolean containsKey(K key) {
-        return get(key) != null;
     }
 }
