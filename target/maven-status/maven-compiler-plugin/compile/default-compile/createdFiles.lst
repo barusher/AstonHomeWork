@@ -1,0 +1,5 @@
+com\example\userservice\util\HibernateUtil.class
+com\example\userservice\dao\UserDao.class
+com\example\userservice\model\User.class
+com\example\userservice\dao\UserDaoImpl.class
+com\example\userservice\UserConsole.class
