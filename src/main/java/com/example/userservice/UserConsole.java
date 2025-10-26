@@ -2,7 +2,7 @@ package com.example.userservice;
 
 import com.example.userservice.dao.UserDao;
 import com.example.userservice.dao.UserDaoImpl;
-import com.example.userservice.model.User;
+import com.example.userservice.model.UserEntity;
 
 import java.util.List;
 import java.util.Scanner;
@@ -38,6 +38,7 @@ public class UserConsole {
                 case "6": {
                     isRunning = false;
                     System.out.println("Cпасибо за проверку работы приложения :) ");
+                    break;
                 }
                 default:
                     System.out.println("Неверная команда :( ");
@@ -67,27 +68,27 @@ public class UserConsole {
         System.out.print("Введите возраст: ");
         int age = Integer.parseInt(scanner.nextLine());
 
-        User user = new User(name, email, age);
-        userDao.save(user);
-        System.out.println("Пользователь создан: " + user);
+        UserEntity userEntity = new UserEntity(name, email, age);
+        userDao.save(userEntity);
+        System.out.println("Пользователь создан: " + userEntity);
     }
 
     private static void showAllUsers() {
-        List<User> users = userDao.getAll();
-        if (users == null || users.isEmpty()) {
+        List<UserEntity> userEntities = userDao.getAll();
+        if (userEntities == null || userEntities.isEmpty()) {
             System.out.println("Нет пользователей в базе.");
         } else {
             System.out.println("Список пользователей:");
-            users.forEach(System.out::println);
+            userEntities.forEach(System.out::println);
         }
     }
 
     private static void getUserById() {
         System.out.print("Введите ID: ");
         Long id = Long.parseLong(scanner.nextLine());
-        User user = userDao.getById(id);
-        if (user != null)
-            System.out.println("Найден: " + user);
+        UserEntity userEntity = userDao.getById(id);
+        if (userEntity != null)
+            System.out.println("Найден: " + userEntity);
         else
             System.out.println("Пользователь с ID " + id + " не найден.");
     }
@@ -95,27 +96,27 @@ public class UserConsole {
     private static void updateUser() {
         System.out.print("Введите ID пользователя для обновления: ");
         Long id = Long.parseLong(scanner.nextLine());
-        User user = userDao.getById(id);
+        UserEntity userEntity = userDao.getById(id);
 
-        if (user == null) {
+        if (userEntity == null) {
             System.out.println("Пользователь с таким ID не найден.");
             return;
         }
 
-        System.out.print("Введите новое имя (" + user.getName() + "): ");
+        System.out.print("Введите новое имя (" + userEntity.getName() + "): ");
         String name = scanner.nextLine();
-        if (!name.isEmpty()) user.setName(name);
+        if (!name.isEmpty()) userEntity.setName(name);
 
-        System.out.print("Введите новый email (" + user.getEmail() + "): ");
+        System.out.print("Введите новый email (" + userEntity.getEmail() + "): ");
         String email = scanner.nextLine();
-        if (!email.isEmpty()) user.setEmail(email);
+        if (!email.isEmpty()) userEntity.setEmail(email);
 
-        System.out.print("Введите новый возраст (" + user.getAge() + "): ");
+        System.out.print("Введите новый возраст (" + userEntity.getAge() + "): ");
         String ageStr = scanner.nextLine();
-        if (!ageStr.isEmpty()) user.setAge(Integer.parseInt(ageStr));
+        if (!ageStr.isEmpty()) userEntity.setAge(Integer.parseInt(ageStr));
 
-        userDao.update(user);
-        System.out.println("Данные об пользователе обновлены: " + user);
+        userDao.update(userEntity);
+        System.out.println("Данные об пользователе обновлены: " + userEntity);
     }
 
     private static void deleteUser() {

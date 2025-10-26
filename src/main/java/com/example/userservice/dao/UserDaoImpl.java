@@ -1,6 +1,6 @@
 package com.example.userservice.dao;
 
-import com.example.userservice.model.User;
+import com.example.userservice.model.UserEntity;
 import com.example.userservice.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -9,19 +9,18 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-
 public class UserDaoImpl implements UserDao {
 
     private static final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
 
     @Override
-    public void save(User user) {
+    public void save(UserEntity userEntity) {
         Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
-            session.persist(user);
+            session.persist(userEntity);
             tx.commit();
-            logger.info("Пользователь сохранён: {}", user);
+            logger.info("Пользователь сохранён: {}", userEntity);
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             logger.error("Ошибка сохранения пользователя", e);
@@ -29,9 +28,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User getById(Long id) {
+    public UserEntity getById(Long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.get(User.class, id);
+            return session.get(UserEntity.class, id);
         } catch (Exception e) {
             logger.error("Ошибка получения пользователя по id: " + id, e);
             return null;
@@ -39,9 +38,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getAll() {
+    public List<UserEntity> getAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("from User", User.class).list();
+            return session.createQuery("from UserEntity", UserEntity.class).list();
         } catch (Exception e) {
             logger.error("Ошибка получение всех пользователей", e);
             return null;
@@ -49,13 +48,13 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void update(User user) {
+    public void update(UserEntity userEntity) {
         Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
-            session.merge(user);
+            session.merge(userEntity);
             tx.commit();
-            logger.info("Данные о пользователе обновлены: {}", user);
+            logger.info("Данные о пользователе обновлены: {}", userEntity);
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             logger.error("Ошибка обновления данных о пользователе", e);
@@ -67,11 +66,11 @@ public class UserDaoImpl implements UserDao {
         Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
-            User user = session.get(User.class, id);
-            if (user != null) {
-                session.remove(user);
+            UserEntity userEntity = session.get(UserEntity.class, id);
+            if (userEntity != null) {
+                session.remove(userEntity);
                 tx.commit();
-                logger.info("Пользователь удалён: {}", user);
+                logger.info("Пользователь удалён: {}", userEntity);
             } else {
                 logger.warn("Пользователь с id {} не найдён", id);
                 if (tx != null) tx.rollback();

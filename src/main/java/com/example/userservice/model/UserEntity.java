@@ -1,12 +1,17 @@
 package com.example.userservice.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,10 +24,10 @@ public class User {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     // Конструкторы
-    public User() {
+    public UserEntity() {
     }
 
-    public User(String name, String email, int age) {
+    public UserEntity(String name, String email, int age) {
         this.name = name;
         this.email = email;
         this.age = age;
@@ -62,7 +67,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserEntity{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
