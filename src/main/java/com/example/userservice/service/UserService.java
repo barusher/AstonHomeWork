@@ -1,35 +1,17 @@
 package com.example.userservice.service;
 
-import com.example.userservice.dao.UserDao;
-import com.example.userservice.model.UserEntity;
+import com.example.userservice.dto.UserDTO;
 
 import java.util.List;
 
-public class UserService {
+public interface UserService {
+    UserDTO createUser(UserDTO dto);
 
-    private final UserDao userDao;
+    UserDTO getUserById(Long id);
 
-    public UserService(UserDao userDao) {
-        this.userDao = userDao;
-    }
+    List<UserDTO> getAllUsers();
 
-    public void createUser(UserEntity user) {
-        userDao.save(user);
-    }
+    UserDTO updateUser(Long id, UserDTO dto);
 
-    public void updateUser(UserEntity user) {
-        userDao.update(user);
-    }
-
-    public void deleteUser(Long id) {
-        userDao.delete(id);
-    }
-
-    public List<UserEntity> getAllUsers() {
-        return userDao.getAll();
-    }
-
-    public UserEntity getUserById(Long id) {
-        return userDao.getById(id);
-    }
+    void deleteUser(Long id);
 }

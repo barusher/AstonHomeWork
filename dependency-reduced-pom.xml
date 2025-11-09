@@ -18,7 +18,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.example.userservice.UserConsole</mainClass>
+                  <mainClass>com.example.test.UserConsole</mainClass>
                 </transformer>
                 <transformer />
               </transformers>

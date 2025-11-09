@@ -1,6 +1,8 @@
-com\example\userservice\util\HibernateUtil.class
-com\example\userservice\UserConsole.class
-com\example\userservice\dao\UserDao.class
-com\example\userservice\dao\UserDaoImpl.class
-com\example\userservice\model\UserEntity.class
+com\example\userservice\exeption\GlobalExeptionHandler.class
+com\example\userservice\entity\UserEntity.class
+com\example\userservice\repository\UserRepository.class
+com\example\userservice\service\UserServiceImpl.class
+com\example\userservice\UserServiceApplication.class
+com\example\userservice\dto\UserDTO.class
+com\example\userservice\controller\UserController.class
 com\example\userservice\service\UserService.class
