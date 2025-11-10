@@ -1,5 +1,6 @@
 package com.example.userservice.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Min;
@@ -16,6 +17,7 @@ public class UserDTO {
     @NotBlank(message = "Не должно быть пустым")
     private String name;
 
+    @Email(message = "Неверный формат email")
     @NotBlank(message = "Не должно быть пустым")
     private String email;
 
